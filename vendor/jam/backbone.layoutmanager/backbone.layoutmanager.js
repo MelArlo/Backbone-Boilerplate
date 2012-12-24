@@ -1,5 +1,5 @@
 /*!
- * backbone.layoutmanager.js v0.7.3
+ * backbone.layoutmanager.js v0.7.4
  * Copyright 2012, Tim Branyen (@tbranyen)
  * backbone.layoutmanager.js may be freely distributed under the MIT license.
  */
@@ -204,7 +204,7 @@ var LayoutManager = Backbone.View.extend({
 
     // Triggered once the render has succeeded.
     function resolve() {
-      var next;
+      var next, afterRender;
 
       // If there is a parent, attach.
       if (parent) {
@@ -254,13 +254,15 @@ var LayoutManager = Backbone.View.extend({
         // Wait until the parent View has finished rendering, which could be
         // asynchronous, and trigger afterRender on this View once it has
         // compeleted.
-        return parent.on("afterRender", function afterRender() {
+        afterRender = function() {
           // Wish we had `once` for this...
           parent.off("afterRender", afterRender, this);
 
           // Trigger the afterRender and set hasRendered.
           completeRender();
-        }, root);
+        };
+
+        return parent.on("afterRender", afterRender, root);
       }
 
       // This View and its parent have both rendered.
@@ -707,7 +709,7 @@ var LayoutManager = Backbone.View.extend({
 // Convenience assignment to make creating Layout's slightly shorter.
 Backbone.Layout = Backbone.LayoutView = Backbone.LayoutManager = LayoutManager;
 // Tack on the version.
-LayoutManager.VERSION = "0.7.3";
+LayoutManager.VERSION = "0.7.4";
 
 // Override _configure to provide extra functionality that is necessary in
 // order for the render function reference to be bound during initialize.
