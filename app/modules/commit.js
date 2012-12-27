@@ -69,7 +69,7 @@ function(app) {
 		
 		tagName: "tr",
 		
-		serializeData: function() {
+		serialize: function() {
 			
 			return {
 				
@@ -110,6 +110,7 @@ function(app) {
 		initialize: function() {
 			
 			// Whenever the collection resets, re-render
+			
 			this.listenTo(this.options.commits, "reset", this.render);
 			
 			// Show a spinner while fetching

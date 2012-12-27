@@ -60,9 +60,13 @@ function(app, Repo) {
 		
 		tagName: "li",
 		
-		serializeData: function() {
+		serialize: function() {
 			
-			return { model: this.model };
+			return {
+				
+				model: this.model
+				
+			};
 			
 		},
 		
@@ -94,9 +98,13 @@ function(app, Repo) {
 		
 		template: "user/list",
 		
-		serializeData: function() {
+		serialize: function() {
 			
-			return { collection: this.options.users };
+			return {
+				
+				collection: this.options.users
+				
+			};
 			
 		},
 		

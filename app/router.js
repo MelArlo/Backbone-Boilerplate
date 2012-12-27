@@ -46,9 +46,9 @@ function(app, Repo, User, Commit) {
 			
 			app.useLayout("main-layout").setViews({
 				
-				".users": new User.Views.List(collections),
-				".repos": new Repo.Views.List(collections),
-				".commits": new Commit.Views.List(collections)
+				".users"	:	new User.Views.List(collections),
+				".repos"	:	new Repo.Views.List(collections),
+				".commits"	:	new Commit.Views.List(collections)
 				
 			}).render();
 			
@@ -66,6 +66,7 @@ function(app, Repo, User, Commit) {
 		index: function() {
 			
 			// Reset the state and render.
+			
 			this.reset();
 			
 		},
@@ -77,6 +78,7 @@ function(app, Repo, User, Commit) {
 			this.reset();
 			
 			// Set the organization.
+			
 			this.users.org = name;
 			
 			// Fetch the data.

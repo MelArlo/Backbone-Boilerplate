@@ -9,9 +9,9 @@
 		
 		"dependencies": {
 			
+			"backbone": "*",
 			"jquery": "*",
 			"lodash": "*",
-			"backbone": "*",
 			"backbone.layoutmanager": "*"
 			
 		}

@@ -56,13 +56,13 @@ function(app, Commit) {
 		
 	});
 	
-	Repo.Views.Item = Backbone.LayoutView.extend({
+	Repo.Views.Item = Backbone.View.extend({
 		
 		template: "repo/item",
 		
 		tagName: "li",
 		
-		serializeData: function() {
+		serialize: function() {
 			
 			return {
 				
@@ -110,13 +110,13 @@ function(app, Commit) {
 		
 	});
 	
-	Repo.Views.List = Backbone.LayoutView.extend({
+	Repo.Views.List = Backbone.View.extend({
 		
 		template: "repo/list",
 		
 		className: "repos-wrapper",
 		
-		serializeData: function() {
+		serialize: function() {
 			
 			return {
 				
