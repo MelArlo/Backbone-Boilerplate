@@ -6,13 +6,11 @@ define([
 	
 	// Modules.
 	
-	"modules/repo",
-	"modules/user",
-	"modules/commit"
+	"modules/shot"
 	
 ],
 	
-function(app, Repo, User, Commit) {
+function(app, Shot) {
 	
 	// Defining the application router, you can attach sub routers here.
 	
@@ -24,17 +22,9 @@ function(app, Repo, User, Commit) {
 			
 			var collections = {
 				
-				// Set up the users.
+				// Set up the shots.
 				
-				users: new User.Collection(),
-				
-				// Set the repos.
-				
-				repos: new Repo.Collection(),
-				
-				// Set up the commits.
-				
-				commits: new Commit.Collection()
+				shots: new Shot.Collection()
 				
 			};
 			
@@ -46,9 +36,7 @@ function(app, Repo, User, Commit) {
 			
 			app.useLayout("main-layout").setViews({
 				
-				".users"	:	new User.Views.List(collections),
-				".repos"	:	new Repo.Views.List(collections),
-				".commits"	:	new Commit.Views.List(collections)
+				".shots"	:	new Shot.Views.List(collections)
 				
 			}).render();
 			
@@ -57,9 +45,7 @@ function(app, Repo, User, Commit) {
 		routes: {
 			
 			"": "index",
-			"org/:name": "org",
-			"org/:org/user/:name": "user",
-			"org/:org/user/:user/repo/:name": "repo"
+			":name": "shot"
 			
 		},
 		
@@ -71,7 +57,7 @@ function(app, Repo, User, Commit) {
 			
 		},
 		
-		org: function(name) {
+		shot: function(name) {
 			
 			// Reset the state and render.
 			
@@ -79,59 +65,11 @@ function(app, Repo, User, Commit) {
 			
 			// Set the organization.
 			
-			this.users.org = name;
+			this.shots.user = name;
 			
 			// Fetch the data.
 			
-			this.users.fetch();
-			
-		},
-		
-		user: function(org, name) {
-			
-			// Reset the state and render.
-			
-			this.reset();
-			
-			// Set the organization.
-			
-			this.users.org = org;
-			
-			// Set the user name.
-			
-			this.repos.user = name;
-			
-			// Fetch the data.
-			
-			this.users.fetch();
-			this.repos.fetch();
-			
-		},
-		
-		repo: function(org, user, name) {
-			
-			// Reset the state and render.
-			
-			this.reset();
-			
-			// Set the organization.
-			
-			this.users.org = org;
-			
-			// Set the user name.
-			
-			this.repos.user = user;
-			
-			// Set the repo name.
-			
-			this.commits.user = user;
-			this.commits.repo = name;
-			
-			// Fetch the data.
-			
-			this.users.fetch();
-			this.repos.fetch();
-			this.commits.fetch();
+			this.shots.fetch();
 			
 		},
 		
@@ -147,28 +85,15 @@ function(app, Repo, User, Commit) {
 			
 			// Reset collections to initial state.
 			
-			if (this.users.length) {
+			if (this.shots.length) {
 				
-				this.users.reset();
-				
-			}
-			
-			if (this.repos.length) {
-				
-				this.repos.reset();
+				this.shots.reset();
 				
 			}
-			
-			if (this.commits.length) {
-				
-				this.commits.reset();
-				
-			}
-			
+						
 			// Reset active model.
 			
 			app.active = false;
-			this.commits.repo = false;
 			
 		}
 		

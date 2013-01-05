@@ -2,23 +2,27 @@ define([
 	
 	// Application
 	
-	"app",
-	
-	// Modules
-	
-	"modules/repo"
+	"app"
 	
 ],
 
-function(app, Repo) {
+function(app) {
 	
-	var User = app.module();
+	var Shot = app.module();
 	
-	User.Collection = Backbone.Collection.extend({
+	Shot.Collection = Backbone.Collection.extend({
 		
 		url: function() {
 			
-			return "https://api.github.com/orgs/" + this.org + "/members?callback=?";
+			return "http://api.dribbble.com/players/" + this.user + "/shots";
+			
+		},  
+		
+		sync: function(method, model, options) {
+			
+			options.timeout = 10000;  
+			options.dataType = "jsonp";  
+			return Backbone.sync(method, model, options);  
 			
 		},
 		
@@ -28,11 +32,13 @@ function(app, Repo) {
 			
 			// Safety check ensuring only valid data is used
 			
-			if (obj.data.message !== "Not Found") {
+			console.log(obj);
+			
+			if (obj.message !== "Not Found") {
 				
 				this.status = "valid";
 				
-				return obj.data;
+				return obj.shots;
 				
 			}
 			
@@ -46,7 +52,9 @@ function(app, Repo) {
 			
 			if (options) {
 				
-				this.org = options.org;
+				console.log("initialize: " + this.user);
+				
+				this.user = options.user;
 				
 			}
 			
@@ -54,9 +62,9 @@ function(app, Repo) {
 		
 	});
 	
-	User.Views.Item = Backbone.View.extend({
+	Shot.Views.Item = Backbone.View.extend({
 		
-		template: "user/item",
+		template: "shot/item",
 		
 		tagName: "li",
 		
@@ -72,17 +80,16 @@ function(app, Repo) {
 		
 		events: {
 			
-			click: "changeUser"
+			click: "viewShot"
 			
 		},
 		
-		changeUser: function(ev) {
+		viewShot: function(ev) {
 			
 			var model = this.model;
-			var org = app.router.users.org;
-			var name = model.get("login");
+			var shot_id = model.get("id");
 			
-			app.router.go("org", org, "user", name);
+			app.router.go("shot", shot_id);
 			
 		},
 		
@@ -94,15 +101,15 @@ function(app, Repo) {
 		
 	});
 	
-	User.Views.List = Backbone.View.extend({
+	Shot.Views.List = Backbone.View.extend({
 		
-		template: "user/list",
+		template: "shot/list",
 		
 		serialize: function() {
 			
 			return {
 				
-				collection: this.options.users
+				collection: this.options.shots
 				
 			};
 			
@@ -110,11 +117,11 @@ function(app, Repo) {
 		
 		beforeRender: function() {
 			
-			this.options.users.each(function(user) {
+			this.options.shots.each(function(shot) {
 				
-				this.insertView("ul", new User.Views.Item({
+				this.insertView("ul", new Shot.Views.Item({
 					
-					model: user
+					model: shot
 					
 				}));
 				
@@ -134,11 +141,11 @@ function(app, Repo) {
 			
 			// Whenever the collection resets, re-render
 			
-			this.listenTo(this.options.users, "reset", this.render);
+			this.listenTo(this.options.shots, "reset", this.render);
 			
 			// Show a spinner while fetching
 			
-			this.listenTo(this.options.users, "fetch", function() {
+			this.listenTo(this.options.shots, "fetch", function() {
 				
 				this.$("ul").parent().html("<img src='/assets/images/spinner-gray.gif'>");
 				
@@ -148,13 +155,13 @@ function(app, Repo) {
 		
 		events: {
 			
-			"submit form": "updateOrg"
+			"submit form": "updateShots"
 			
 		},
 		
-		updateOrg: function(ev) {
+		updateShots: function(ev) {
 			
-			app.router.go("org", this.$(".org").val());
+			app.router.go(this.$(".user").val());
 			
 			return false;
 			
@@ -164,6 +171,6 @@ function(app, Repo) {
 	
 	// Required, return the module for AMD compliance
 	
-	return User;
+	return Shot;
 	
 });
