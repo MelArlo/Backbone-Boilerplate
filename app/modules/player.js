@@ -161,7 +161,7 @@ function(app) {
 		
 		updateShots: function(ev) {
 			
-			app.router.go("shots", this.$(".user").val());
+			app.router.go(this.$(".user").val());
 			
 			return false;
 			
